@@ -16,7 +16,7 @@ load_dotenv()
 MONGO_USER = os.getenv('MONGO_USER')
 MONGO_PASS = os.getenv('MONGO_PASS')
 MONGODB_URI = os.getenv('MONGODB_URI')
-MONGODB_DATABASENAME = os.getenv('MONGODB_DATABASENAME')
+MONGODB_DATABASENAME = os.getenv('MONGODB_DATABASENAME')?:'OutageManager'
 
 # Verificar que todas las variables de entorno necesarias estén definidas
 if not all([MONGO_USER, MONGO_PASS, MONGODB_URI, MONGODB_DATABASENAME]):
