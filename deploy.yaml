@@ -1,0 +1,56 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: my-python
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-app
+  template:
+    metadata:
+      labels:
+        app: python-app
+    spec:
+      containers:
+        - name: my-python
+          image: python-image:latest
+          ports:
+            - name: http
+              containerPort: 8081
+              protocol: TCP
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "128m"
+          env:
+            - name: TZ
+              value: America/Argentina/Buenos_Aires
+            - name: MONGODB_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: om-commons-config
+                  key: MONGODB_URI
+            - name: MONGO_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: outage-manager-mongo-db-credentials
+                  key: spring_data_mongodb_password
+            - name: MONGO_USER
+              valueFrom:
+                secretKeyRef:
+                  name: outage-manager-mongo-db-credentials
+                  key: spring_data_mongodb_username              
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: my-python
+spec:
+  ports:
+    - name: http-8081
+      port: 8081
+      protocol: TCP
+      targetPort: 8081
+  selector:
+    app: python-app
