@@ -84,10 +84,10 @@ def aggregate_raised_alarms(db, limit=5):
         {
             "$replaceRoot": { "newRoot": "$alarms" }
         },
-        # Paso 7: Filtrar solo las alarmas con alarmState 'RAISED'
+        # Paso 7: Filtrar solo las alarmas con alarmState 'RAISED', 'UPDATED', 'RETRY'
         {
             "$match": {
-                "alarmState": "RAISED",
+                "alarmState": { "$in": ['RAISED', 'UPDATED', 'RETRY'] },
                 "alarmId": { "$exists": True, "$ne": None },
                 "origenId": { "$exists": True, "$ne": None }
             }
